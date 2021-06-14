@@ -9,18 +9,18 @@ import Footer from 'components/Footer';
 import globalStyles from './globaStyles';
 
 const App = () => {
-    return (
-        <ThemeProvider theme={theme}>
-            <Container>
-                <Global styles={globalStyles} />
-                <h1>
-                    Gotta <span className="red">search'em</span> all
-                </h1>
-                <Pokedex />
-                <Footer />
-            </Container>
-        </ThemeProvider>
-    );
+	return (
+		<ThemeProvider theme={theme}>
+			<Container>
+				<Global styles={globalStyles} />
+				<h1>
+					Gotta <span className="red">search'em</span> all
+				</h1>
+				<Pokedex />
+				<Footer />
+			</Container>
+		</ThemeProvider>
+	);
 };
 
 export default App;

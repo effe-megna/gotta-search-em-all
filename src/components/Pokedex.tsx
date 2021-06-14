@@ -9,38 +9,62 @@ import { Global, css } from '@emotion/core';
 import pikachu from '../assets/pikachu.png';
 
 const Pokedex = () => {
-    const { pokemon, pokemonIndex, loading, changePokemonIndex } = usePokemon();
-    const loadedImage = useProgressiveImage(`/backgrounds/${getBackground()}.jpg`);
+	// const containerRef = React.useRef<HTMLDivElement | null>(null)
 
-    if (loading) {
-        return <Loading noBackground />;
-    }
+	const { pokemon, pokemonIndex, loading, changePokemonIndex } = usePokemon();
+	const loadedImage = useProgressiveImage(`/backgrounds/${getBackground()}.jpg`);
 
-    function getBackground() {
-        // pokemonIndex is guaranteed to be above 0
-        if (pokemonIndex < 152 && pokemon?.pokemonData.name) {
-            return pokemon?.pokemonData.name;
-        }
+	const onKeyPress = React.useCallback((event: KeyboardEvent) => {
+		if (event.keyCode === 38) {
+			changePokemonIndex(pokemonIndex + 1)
+		} else if (event.keyCode === 40) {
+			changePokemonIndex(pokemonIndex - 1)
+ 		} else {
+			 return
+		}
+	}, [changePokemonIndex, pokemonIndex])
 
-        return 'pikachu';
-    }
+	React.useEffect(() => {
+		document.addEventListener("keydown", (event) => {
+			onKeyPress(event)
+		})
 
-    return (
-        <Container>
-            <Global
-                styles={css`
+		return () => {
+			document.removeEventListener("keydown", (event) => {
+				onKeyPress(event)
+			})
+		}
+	}, [])
+
+	if (loading) {
+		return <Loading noBackground />;
+	}
+
+	function getBackground() {
+		// pokemonIndex is guaranteed to be above 0
+		if (pokemonIndex < 152 && pokemon?.pokemonData.name) {
+			return pokemon?.pokemonData.name;
+		}
+
+		return 'pikachu';
+	}
+
+	return (
+		<Container>
+			<Global
+				styles={css`
                     body {
                         background-image: url(${loadedImage || pikachu});
                     }
                 `}
-            />
-            <div className="inner-container">
-                <LeftPanel pokemon={pokemon} pokemonIndex={pokemonIndex} />
-                <Divider />
-                <RightPanel pokemon={pokemon} pokemonIndex={pokemonIndex} changePokemonIndex={changePokemonIndex} />
-            </div>
-        </Container>
-    );
+			/>
+			<div className="inner-container">
+				<LeftPanel pokemon={pokemon} pokemonIndex={pokemonIndex} />
+				<Divider />
+				<RightPanel pokemon={pokemon} pokemonIndex={pokemonIndex} changePokemonIndex={changePokemonIndex} />
+			</div>
+		</Container>
+	);
 };
 
 export default Pokedex;
